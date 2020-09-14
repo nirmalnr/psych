@@ -1,0 +1,38 @@
+<table class="table">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Score</th>
+      <th scope="col">Rounds</th>
+      <th scope="col">Last answer</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @scorecards.each do |card| %>
+      <tr>
+        <th scope="row"><%=User.find(card.user_id).username%></th>
+        <td><%=card.score%></td>
+        <td><%=card.rounds%></td>
+        <td><%=card.user_answer%></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<% bs = @scorecards.where(user_id:current_user.id).first.user_answer %>
+<% answer = @scorecards.where(user_id:current_user.id).first.selected_answer %>
+
+<% @psyched = @scorecards.where(selected_answer:bs) %>
+<% @psyched.each do |card| %>
+    <h4> You psyched <%= User.find(card.user_id).username %> !! </h4>
+<% end %>
+
+<% @psyched_by = @scorecards.where(user_answer:answer) %>
+<% @psyched_by.each do |card| %>
+    <h4> You were psyched by <%= User.find(card.user_id).username %> !! </h4>
+<% end %>
+
+<div style= 'padding:10px;'>
+    <%= form_with(url: "/game/wait_for_next", method: "post", local: true) do %>
+        <%= submit_tag("Next", class: "btn btn-secondary", style: "width: 180px;")%>
+    <% end %>
+</div>

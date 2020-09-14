@@ -1,0 +1,15 @@
+<div style="text-align: center">
+    <h3 style= 'padding:10px;'><%=@question.html_safe%></h3>
+</div>
+
+<%= form_with(url: "/game/collect_answer", method: "post", local: true) do %>
+    <div style="text-align: left;padding-left:35%">
+        <% @options.each do |c| %>
+            <%= radio_button_tag(:answer, c, class:"form-check-input") %> 
+            <%= label_tag(:answer, c) %><br>
+        <% end %>
+    </div>
+    <div style="text-align: center;padding:10px">
+        <%= submit_tag("Submit", class: "btn btn-secondary", style: "width: 180px;")%>
+    </div>
+<% end %>

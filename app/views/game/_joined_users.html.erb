@@ -1,0 +1,7 @@
+<div style="display:inline-block;padding:10px">
+    <ul class="list-group">
+        <% @joined.each do |card| %> 
+            <li class="list-group-item" width:'50%'> <%= User.find(card.user_id).username%> </li>
+        <% end %>
+    </ul>
+</div>

@@ -1,0 +1,11 @@
+<h1 style="padding:10px"><%= @room.name %></h1>
+
+<h2 style="padding:10px">Joined Users</h2>
+<%= render_async game_get_joined_users_path, interval: 3000 %>
+
+
+<div style= 'padding:10px'>
+    <%= form_with(url: "/game/get_bs", method: "post", local: true) do %>
+        <%= submit_tag("Start", class: "btn btn-secondary")%>
+    <% end %>
+</div>

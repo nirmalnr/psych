@@ -1,0 +1,20 @@
+<div style="padding:10px">
+    <ul class="list-group">
+        <% @stats.each do |stat| %> 
+            <li class="list-group-item d-flex justify-content-between align-items-center" width:'500px'> 
+                <%= User.find(stat[0]).username%> 
+                <% if !stat[1] %>
+                    <span class="badge badge-primary badge-pill"> Waiting </span>
+                <%end%>
+            </li>
+        <% end %>
+    </ul>
+</div>
+
+<% if !@stats.has_value? false %>
+    <div style= 'padding:10px;'>
+        <%= form_with(url: @path, method: "post", local: true) do %>
+            <%= submit_tag("Next", class: "btn btn-secondary", style: "width: 180px;")%>
+        <% end %>
+    </div>   
+<% end %>
