@@ -70,7 +70,11 @@ class GameController < ApplicationController
     @stats = {}
     @path = '/game/quiz'
     scorecards.each do |card|
-      @stats[card.user_id] = card.user_answer ? true : false
+      if card.status == 'inactive'
+        @stats[card.user_id] = 'inactive'
+      else
+        @stats[card.user_id] = card.user_answer ? 'answered' : 'waiting'
+      end
     end
     render partial: 'answer_stats'
   end
@@ -103,7 +107,11 @@ class GameController < ApplicationController
     @stats = {}
     @path = '/game/score'
     scorecards.each do |card|
-      @stats[card.user_id] = card.selected_answer ? true : false
+      if card.status == 'inactive'
+        @stats[card.user_id] = 'inactive'
+      else
+        @stats[card.user_id] = card.selected_answer ? 'answered' : 'waiting'
+      end
     end
     render partial: 'answer_stats'
   end
@@ -133,7 +141,19 @@ class GameController < ApplicationController
     scorecards.each do |card|
       @stats[card.user_id] = card.status.in?(['ready','playing']) ? true : false
     end
+    scorecards.each do |card|
+      if card.status == 'inactive'
+        @stats[card.user_id] = 'inactive'
+      else
+        @stats[card.user_id] = card.status.in?(['ready','playing'])? 'ready' : 'waiting'
+      end
+    end
     render partial: 'answer_stats'
+  end
+
+  def kick_player
+    user = Scorecard.where(room_id:session[:room_id],user_id:params[:user_id]).first
+    user.update(status:'inactive')
   end
 
   private

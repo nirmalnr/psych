@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  
   get  'game/home'
   post 'game/create_room'
   get  'game/create_room'
@@ -22,13 +23,11 @@ Rails.application.routes.draw do
   get 'game/get_bs_stat'
   get 'game/get_answer_stat'
   get 'game/get_ready_stat'
+  get 'game/kick_player'
 
   devise_for :users
 
-  get :get_joined_users, controller: :game
-  get :get_bs_stat, controller: :game
-  get :get_answer_stat, controller: :game
-  get :get_ready_stat, controller: :game
+
 
   root to: "game#home"
 
