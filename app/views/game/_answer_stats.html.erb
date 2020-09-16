@@ -6,7 +6,7 @@
                 <% if stat[1] == 'waiting' %>
                     <div class = "d-flex flex-row-reverse align-items-center">
                     <span class="badge badge-primary badge-pill mr-2"> Waiting </span>
-                    <%= link_to 'Kick', game_kick_player_path(user_id:stat[0]), class: "badge badge-danger badge-pill mr-2", remote: true %>
+                    <%= link_to 'Kick', game_kick_player_path(user_id:stat[0]), class: "badge badge-danger badge-pill mr-2", remote: true, data: {confirm: "Are you sure you want to kick the player off the game?", disable_with: "..." } %>
                     </div>
                 <%end%>
                 <% if stat[1] == 'inactive' %>

@@ -8,7 +8,8 @@ class GameController < ApplicationController
   def create_room
     if request.post?
       room_name = ('A'..'Z').to_a.shuffle[0,4].join while room_exists(room_name)
-      @room = Room.create(name:room_name)
+      question, answer = get_question_and_answer
+      @room = Room.create(name:room_name,question:question,answer:answer)
       session[:room_id] = @room.id
       Scorecard.create(room_id:@room.id, user_id:current_user.id, status:'ready')
     else #get
@@ -30,8 +31,11 @@ class GameController < ApplicationController
       @room = Room.where(name:room_name).first
       if @room 
         session[:room_id] = @room.id
-        if !user_in_room(@room.id,current_user.id)
-          Scorecard.create(room_id:@room.id, user_id:current_user.id, status:'ready')
+        card = Scorecard.where(room_id:@room.id,user_id:current_user.id).first
+        if !card
+          card = Scorecard.create(room_id:@room.id, user_id:current_user.id, status:'ready')
+        else
+          card.update(status:'ready')
         end
       else 
         redirect_to root_path, notice: "Room not found"
@@ -47,8 +51,8 @@ class GameController < ApplicationController
   def get_bs
     if request.post?
       if @room.status == "waiting_for_players"
-        question, answer = get_question_and_answer
-        @room.update(status:"waiting_for_bs",question:question,answer:answer)
+        #question, answer = get_question_and_answer
+        @room.update(status:"waiting_for_bs")#,question:question,answer:answer)
         clear_scorecard(session[:room_id])
       end
     else #get
@@ -85,7 +89,7 @@ class GameController < ApplicationController
         @room.update(status:"waiting_for_answer")
       end
     end
-    scorecards = Scorecard.where("room_id = ? and user_id != ?",@room.id,current_user.id)
+    scorecards = Scorecard.where("room_id = ? and user_id != ? and status != ?",@room.id,current_user.id,Scorecard.statuses['inactive'])
     @question = @room.question
     @options = []
     @options.append(@room.answer)
@@ -130,7 +134,9 @@ class GameController < ApplicationController
     scorecard = Scorecard.where(room_id:@room.id,user_id:current_user.id).first
     scorecard.update(status:'ready')
     if @room.status == "show_score"
-      @room.update(status:"waiting_for_players")
+      #set next question
+      question, answer = get_question_and_answer
+      @room.update(status:"waiting_for_players",question:question,answer:answer)
     end
   end
 
@@ -138,9 +144,6 @@ class GameController < ApplicationController
     scorecards = Scorecard.where(room_id:session[:room_id])
     @stats = {}
     @path = '/game/get_bs'
-    scorecards.each do |card|
-      @stats[card.user_id] = card.status.in?(['ready','playing']) ? true : false
-    end
     scorecards.each do |card|
       if card.status == 'inactive'
         @stats[card.user_id] = 'inactive'
