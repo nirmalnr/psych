@@ -1,6 +1,7 @@
+<span style="padding:10px">This is your room code : </span>
 <h1 style="padding:10px"><%= @room.name %></h1>
-
-<h2 style="padding:10px">Joined Users</h2>
+<span style="padding:10px">Share it with your friends.</span>
+<h3 style="padding:10px">Joined Users</h3>
 <%= render_async game_get_joined_users_path, interval: 3000 %>
 
 

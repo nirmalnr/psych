@@ -7,7 +7,7 @@
 
 <%= form_with(url: "/game/join_room", method: "post", local: true) do %>
     <div class="input-group mb-3" style= 'padding:10px;width: 200px;' >
-        <%= text_field_tag(:room_name, "", class: "form-control") %>
+        <%= text_field_tag(:room_name, "", class: "form-control", required: "true") %>
         <div class="input-group-append">
         <%= submit_tag("Join game", class: "btn btn-secondary")%>
         </div>
