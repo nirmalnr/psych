@@ -1,1 +1,20 @@
 @import "bootstrap/scss/bootstrap";
+
+#Login {
+    position: relative;
+    margin-top: 6vh;
+    width: calc(30vw);
+    min-width: 350px;
+    text-align: center;
+}
+
+.form-group {
+    text-align: left;
+}
+
+.inline-field input,
+.inline-field label {
+  display: inline-block;
+  margin-bottom: 0; /* I added this after I posted my reply */
+  vertical-align: middle; /* Fixes any weird issues in Firefox and IE */
+}
